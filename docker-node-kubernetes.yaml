@@ -1,0 +1,39 @@
+# https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docker-nodejs-demo
+  namespace: default
+  labels:
+    app: docker-nodejs-demo
+spec:
+  selector:
+    matchLabels:
+      todo: web
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        todo: web
+    spec:
+      containers:
+      - name: todo-site 
+        image: anwarcharawista/getting-started-todo-app
+        imagePullPolicy: Always
+---
+# https://kubernetes.io/docs/concepts/services-networking/service/
+apiVersion: v1
+kind: Service
+metadata:
+  name: todo-entrypoint
+  namespace: default
+spec:
+  type: NodePort
+  selector:
+    todo: web
+  ports:
+    - port: 3000
+      targetPort: 3000
+      nodePort: 30001
+---
+
